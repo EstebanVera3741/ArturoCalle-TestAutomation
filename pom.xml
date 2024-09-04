@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.piscilago</groupId>
+    <artifactId>ArturoCalle-TestAutomation</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <maven.compiler.source>22</maven.compiler.source>
+        <maven.compiler.target>22</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <serenity-version>3.9.0</serenity-version>
+        <junit-version>4.13.2</junit-version>
+        <maven-plugins-version>3.1.2</maven-plugins-version>
+        <slf4j-version>2.0.7</slf4j-version>
+    </properties>
+
+    <dependencies>
+        <!-- Serenity Core - Automatiza las pruebas, gestiona y documenta TC -->
+        <dependency>
+            <groupId>net.serenity-bdd</groupId>
+            <artifactId>serenity-core</artifactId>
+            <version>${serenity-version}</version>
+        </dependency>
+        <!-- Serenity Cucumber - Permite escribir TC en un lenguaje Gherkin -->
+        <dependency>
+            <groupId>net.serenity-bdd</groupId>
+            <artifactId>serenity-cucumber</artifactId>
+            <version>${serenity-version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- Serenity Junit - Permite ejecutar pruebas escritas en JUnit dentro del contexto de Serenity -->
+        <dependency>
+            <groupId>net.serenity-bdd</groupId>
+            <artifactId>serenity-junit</artifactId>
+            <version>${serenity-version}</version>
+        </dependency>
+        <!-- Junit - Proporciona una manera sencilla y eficiente de escribir y ejecutar pruebas unitarias -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit-version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- SLF4J - Proporciona una implementación simple del log para pruebas y desarrollo -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j-version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Maven Surefire - Ejecuta todas las pruebas unitarias y genera reportes de los resultados -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-plugins-version}</version>
+                <configuration>
+                    <includes>
+                        <include>**/Runner*.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+            <!-- Maven Failsafe - Ejecuta pruebas de integración después de que compile y despliege en un entorno de prueba -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${maven-plugins-version}</version>
+                <configuration>
+                    <includes>
+                        <include>**/test/**/*.java</include>
+                    </includes>
+                    <systemPropertyVariebles>
+                        <surefire.security.manager>
+                            java.lan.SecurityManager
+                        </surefire.security.manager>
+                    </systemPropertyVariebles>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Maven Compiler - Configura la versión del compilador de Java para compilar el código fuente -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${serenity-version}</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <source>${maven.compiler.target}</source>
+                </configuration>
+            </plugin>
+            <!-- Serenity Maven - Agrega los reportes de Serenity durante la fase post-integration-test -->
+            <plugin>
+                <groupId>net.serenity-bdd.maven.plugins</groupId>
+                <artifactId>serenity-maven-plugin</artifactId>
+                <version>${serenity-version}</version>
+                <executions>
+                    <execution>
+                        <id>serenity-reports</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>aggregate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
